@@ -2,10 +2,12 @@ package com.example.demo.domain.auth.usecase
 
 import com.example.demo.domain.auth.domain.Provider
 import com.example.demo.domain.auth.domain.User
+import com.example.demo.domain.auth.dto.GoogleLoginResult
 import com.example.demo.domain.auth.dto.GoogleOAuthProperties
 import com.example.demo.domain.auth.dto.request.GoogleAuthorizeCodeRequest
 import com.example.demo.domain.auth.dto.response.GoogleUserInfoResponse
 import com.example.demo.domain.auth.exception.WrongAccessTokenException
+import com.example.demo.domain.auth.jwt.JwtTokenProvider
 import com.example.demo.domain.auth.repository.UserRepository
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.springframework.http.*
@@ -16,7 +18,8 @@ import org.springframework.web.client.RestTemplate
 @Service
 class OAuthUseCase(
     private val userRepository: UserRepository,
-    private val googleOAuthProperties: GoogleOAuthProperties
+    private val googleOAuthProperties: GoogleOAuthProperties,
+    private val jwtTokenProvider: JwtTokenProvider
 ) {
     private fun extractAccessToken(body: String?): String {
         try {
@@ -68,7 +71,7 @@ class OAuthUseCase(
         return response.body;
     }
 
-    fun execute(request: GoogleAuthorizeCodeRequest): User {
+    private fun execute(request: GoogleAuthorizeCodeRequest): User {
         val accessToken = getAccessToken(request.code, request.redirectUri)
         val googleUser = getUserInfo(accessToken)
             ?: throw WrongAccessTokenException()
@@ -82,5 +85,11 @@ class OAuthUseCase(
                     userProvider = Provider.GOOGLE
                 )
             )
+    }
+
+    fun googleLogin(request: GoogleAuthorizeCodeRequest): GoogleLoginResult {
+        val user = execute(request)
+        val token = jwtTokenProvider.generateToken(user)
+        return GoogleLoginResult(user, token)
     }
 }
