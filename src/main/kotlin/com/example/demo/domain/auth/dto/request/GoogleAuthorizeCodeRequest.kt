@@ -6,5 +6,5 @@ data class GoogleAuthorizeCodeRequest(
     @field:NotBlank
     val code: String,
     @field:NotBlank
-    var redirectUri: String
+    val redirectUri: String
 )

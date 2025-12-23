@@ -3,10 +3,10 @@ package com.example.demo.global.dto
 import java.time.LocalDateTime
 
 data class ErrorResponse(
-    private var code: Int,
-    private var message: String,
-    private var timestamp: LocalDateTime,
-    private var details: Map<String, String>? = null
+    val code: Int,
+    val message: String,
+    val timestamp: LocalDateTime,
+    val details: Map<String, String>? = null
 ) {
     companion object {
         fun of(code: Int, message: String): ErrorResponse {
