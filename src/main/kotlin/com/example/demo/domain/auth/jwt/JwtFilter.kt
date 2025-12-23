@@ -7,18 +7,19 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.util.AntPathMatcher
+import org.springframework.web.filter.OncePerRequestFilter
 import java.io.IOException
 
 class JwtFilter(
     private val jwtAuth: JwtAuthenticationFilter,
     private val pathMatcher: AntPathMatcher = AntPathMatcher(),
-) {
+): OncePerRequestFilter() {
     val PERMIT_ALL_PATHS = mutableListOf<String?>(
         "/"
     )
 
     @Throws(ServletException::class, IOException::class)
-    fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
+    override fun doFilterInternal(request: HttpServletRequest, response: HttpServletResponse, filterChain: FilterChain) {
         val path = request.requestURI
 
         // 허용 경로면 그냥 통과
