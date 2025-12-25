@@ -1,21 +1,19 @@
 package com.example.demo.domain.post.controller
 
-import com.example.demo.domain.post.domain.Post
 import com.example.demo.domain.post.dto.request.CreatePostRequest
 import com.example.demo.domain.post.dto.request.UpdatePostRequest
 import com.example.demo.domain.post.dto.response.FindPostResponse
-import com.example.demo.domain.post.dto.response.FindPostShallow
 import com.example.demo.domain.post.dto.response.FindPostsShallow
 import com.example.demo.domain.post.mapper.FindPostShallowDtoMapper
 import com.example.demo.domain.post.usecase.CreatePostUseCase
+import com.example.demo.domain.post.usecase.DeletePostUseCase
 import com.example.demo.domain.post.usecase.FindPostUseCase
 import com.example.demo.domain.post.usecase.UpdatePostUseCase
 import com.example.demo.global.dto.ApiResponse
 import jakarta.validation.Valid
-import lombok.Value
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,7 +26,8 @@ import java.net.URI
 class PostController(
     val createPostUseCase: CreatePostUseCase,
     val findPostUseCase: FindPostUseCase,
-    val updatePostUseCase: UpdatePostUseCase
+    val updatePostUseCase: UpdatePostUseCase,
+    val deletePostUseCase: DeletePostUseCase,
 ) {
     @PostMapping("/create")
     fun cratePost(
@@ -66,6 +65,13 @@ class PostController(
     @PostMapping("/update/post/{id}")
     fun updatePost(@Valid request: UpdatePostRequest): ResponseEntity<ApiResponse<Void>> {
         updatePostUseCase.updatePost(request)
+        return ResponseEntity.ok(ApiResponse.success())
+    }
+
+
+    @DeleteMapping("/delete/post/{id}")
+    fun deletePost(@PathVariable id: Long?): ResponseEntity<ApiResponse<Void>> {
+        deletePostUseCase.deletePost(id)
         return ResponseEntity.ok(ApiResponse.success())
     }
 }
