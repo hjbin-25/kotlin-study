@@ -15,7 +15,7 @@ class FindPostUseCase(
     }
 
     // 특정 게시글 조회
-    fun findPostById(id: Long): Post {
+    fun findPostById(id: Long?): Post {
         val post = postRepository.findPostByPostId(id)
 
         if (post.equals(null))

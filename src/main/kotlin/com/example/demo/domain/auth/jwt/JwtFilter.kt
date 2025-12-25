@@ -15,7 +15,8 @@ class JwtFilter(
     private val pathMatcher: AntPathMatcher = AntPathMatcher(),
 ): OncePerRequestFilter() {
     val PERMIT_ALL_PATHS = mutableListOf<String?>(
-        "/"
+        "/",
+        "/find/all/posts"
     )
 
     @Throws(ServletException::class, IOException::class)

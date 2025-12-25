@@ -14,6 +14,7 @@ import jakarta.persistence.Table
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.OnDelete
 import org.hibernate.annotations.OnDeleteAction
+import org.hibernate.annotations.UpdateTimestamp
 import java.time.LocalDateTime
 
 @Entity
@@ -25,18 +26,28 @@ class Post(
     val postId: Long? = null,
 
     @Column(name = "p_title", nullable = false)
-    val postTitle: String,
+    var postTitle: String,
 
     @Column(name = "p_text", nullable = false)
-    val postText: String,
+    var postText: String,
 
     @CreationTimestamp
     @JsonIgnore
     @Column(name = "p_created_at", nullable = true)
     val postCreatedAt: LocalDateTime? = null,
 
+    @UpdateTimestamp
+    @JsonIgnore
+    @Column(name = "p_updated_at", nullable = true)
+    var postUpdatedAt: LocalDateTime? = null,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_u_id", referencedColumnName = "u_id", updatable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     val writer: User
-)
+) {
+    fun update(postTitle: String, postText: String) {
+        this.postTitle = postTitle
+        this.postText = postText
+    }
+}

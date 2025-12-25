@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostRepository : JpaRepository<Post, Long> {
-    fun findPostByPostId(id: Long): Post
+    fun findPostByPostId(id: Long?): Post
 }

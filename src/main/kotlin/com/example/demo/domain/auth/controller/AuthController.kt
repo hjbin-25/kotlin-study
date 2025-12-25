@@ -6,6 +6,7 @@ import com.example.demo.domain.auth.dto.response.GoogleUserInfoResponse
 import com.example.demo.domain.auth.usecase.DefaultUserUseCase
 import com.example.demo.domain.auth.usecase.OAuthUseCase
 import com.example.demo.global.dto.ApiResponse
+import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -20,7 +21,7 @@ class AuthController(
     private val defaultUserUseCase: DefaultUserUseCase
 ) {
     @PostMapping("/google/login")
-    fun googleLogin(@RequestBody request: GoogleAuthorizeCodeRequest): ResponseEntity<ApiResponse<GoogleUserInfoResponse>> {
+    fun googleLogin(@Valid @RequestBody request: GoogleAuthorizeCodeRequest): ResponseEntity<ApiResponse<GoogleUserInfoResponse>> {
         val result = oAuthUseCase.googleLogin(request)
         return ResponseEntity.ok(
             ApiResponse(
